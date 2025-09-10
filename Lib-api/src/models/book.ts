@@ -8,6 +8,7 @@ export interface Book {
     authorId: string;
     year?: number;
     genre?: string;
+
 }
 
 export const books: Book[] = [];
