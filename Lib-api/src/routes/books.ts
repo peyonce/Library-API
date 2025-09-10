@@ -18,3 +18,16 @@ router.post('/', (req: Request, res: Response) => {
 
     res.status(201).json(newBook);
 });
+
+router.get('/', (req: Request, res: Response) => {
+    res.json(books);
+});
+
+router.get('/', (req: Request, res: Response) => {
+    const book: Book | undefined = books.find(b => b.id === req.params.id);
+    if (!book) return res.status(404).json({ error: 'Book not found' });
+
+    res.json(book);
+});
+
+
