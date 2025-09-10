@@ -59,6 +59,7 @@ router.delete('/:id', (req: Request, res: Response) => {
     res.json({ message: 'Book deleted', book: deleted[0] });
 });
 
+export default router;
 
 
 
