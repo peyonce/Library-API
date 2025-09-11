@@ -1,75 +1,12 @@
-import { Router, Request, Response } from 'express';
-import { books, Book, createBook } from '../models/book';
-import { authors } from '../models/author';
+import { Router } from 'express';
+import { getBooks, getBookById, createNewBook, updateBook, deleteBook } from '../controllers/booksControllers';
 
 const router = Router();
 
-
-router.post('/', (req: Request, res: Response) => {
-    const { title, authorId, year, genre } = req.body;
-
-    if (!title) {
-        return res.status(400).json({ error: 'Title is required' });
-    }
-
-
-    let finalAuthorId = authorId;
-    if (!finalAuthorId) {
-        if (authors.length > 0) {
-            finalAuthorId = authors[0].id;
-        } else {
-            return res.status(400).json({ error: 'No authors available. Create one first.' });
-        }
-    }
-
-    const newBook = createBook(title, finalAuthorId, year, genre);
-    if (!newBook) {
-        return res.status(404).json({ error: 'Author not found' });
-    }
-
-    res.status(201).json(newBook);
-});
-
-
-router.get('/', (req: Request, res: Response) => {
-    res.json(books);
-});
-
-
-router.get('/:id', (req: Request, res: Response) => {
-    const book = books.find(b => b.id === req.params.id);
-    if (!book) return res.status(404).json({ error: 'Book not found' });
-
-    res.json(book);
-});
-
-// Update a book by ID
-router.put('/:id', (req: Request, res: Response) => {
-    const book = books.find(b => b.id === req.params.id);
-    if (!book) return res.status(404).json({ error: 'Book not found' });
-
-    const { title, authorId, year, genre } = req.body;
-
-    if (authorId) {
-        const authorExists = authors.some(a => a.id === authorId);
-        if (!authorExists) return res.status(404).json({ error: 'Author not found' });
-        book.authorId = authorId;
-    }
-
-    if (title) book.title = title;
-    if (year !== undefined) book.year = Number(year);
-    if (genre !== undefined) book.genre = genre;
-
-    res.json(book);
-});
-
-
-router.delete('/:id', (req: Request, res: Response) => {
-    const index = books.findIndex(b => b.id === req.params.id);
-    if (index === -1) return res.status(404).json({ error: 'Book not found' });
-
-    const deleted = books.splice(index, 1);
-    res.json({ message: 'Book deleted', book: deleted[0] });
-});
+router.get('/', getBooks);
+router.get('/:', getBookById);
+router.post('/', createNewBook);
+router.put('/:id', updateBook);
+router.delete('/:id', deleteBook)
 
 export default router;
