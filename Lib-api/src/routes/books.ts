@@ -4,7 +4,7 @@ import { getBooks, getBookById, createNewBook, updateBook, deleteBook } from '..
 const router = Router();
 
 router.get('/', getBooks);
-router.get('/:', getBookById);
+router.get('/:id', getBookById);
 router.post('/', createNewBook);
 router.put('/:id', updateBook);
 router.delete('/:id', deleteBook)
